@@ -5,7 +5,7 @@ Navigate through an abandoned school, collect 6 items, and defeat Principal X to
 Do you have what it takes to survive the SNHU Apocalypse?
 
 ## 📁 Original Artifact
-The original version is on the `main` branch.
+The original version is on the [`main`](https://github.com/JWiggins973/text-adventure-python.git) branch.
 
 ## ⚡ Enhancements - Software Design and Engineering
 - 🏗️ Refactored code into `Room`, `Player`, and `Game` classes
