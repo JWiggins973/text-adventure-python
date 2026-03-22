@@ -9,7 +9,7 @@ This is the **original version** of the game built in IT-145.
 No classes. No GUI. Just code
 
 ## ⚡ Enhancements
-See the `enhancements` branch for the full **Software Design and Engineering** upgrade:
+See the [`enhancements`](https://github.com/JWiggins973/text-adventure-python/tree/enhancements) branch for the full **Software Design and Engineering** upgrade:
 - OOP refactor with `Room`, `Player`, and `Game` classes
 - Tkinter GUI with room images and interactive buttons
 
