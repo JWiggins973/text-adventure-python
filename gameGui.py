@@ -1,5 +1,4 @@
-import tkinter as tk  # Import tkinter for GUI elements
-from game import Game
+import tkinter as tk
 
 
 class GameGUI:
@@ -10,19 +9,19 @@ class GameGUI:
         self.root.geometry("600x800")
         self.root.configure(bg="black")
         self.root.title("SNHU Apocalypse")
+        # Force all child widgets to inherit the black background by default
         self.root.tk_setPalette(background="black")
+        # Ensure the process exits cleanly when the window is closed
+        self.root.protocol("WM_DELETE_WINDOW", self.root.destroy)
         self.create_widgets()
 
-    # Display game instructions and current status in the GUI
     def show_game_instructions(self):
         """Display the game instructions in the GUI."""
         self.game_text.config(state="normal")
-        self.game_text.delete("1.0", tk.END)  # Clear old text
-        self.game_text.insert(
-            tk.END, self.game.game_instructions()
-        )  # Insert instructions
+        self.game_text.delete("1.0", tk.END)
+        self.game_text.insert(tk.END, self.game.game_instructions())
         self.game_text.config(state="disabled")
-        # Start game button
+        # Show a Start Game button so the player can read instructions before playing
         self.start_button = tk.Button(
             self.root,
             text="Start Game",
@@ -33,17 +32,16 @@ class GameGUI:
         )
         self.start_button.pack(pady=10)
 
-    # Start the game by updating the GUI and removing the start button
     def start_game(self):
         """Start the game by updating the GUI and removing the start button."""
-        self.start_button.destroy()  # Remove the start button
-        self.button_frame.pack(pady=10)  # Show the button frame for navigation buttons
-        self.update_gui()  # Update the GUI with the initial game state
+        self.start_button.destroy()
+        # Reveal the navigation button frame now that the game has started
+        self.button_frame.pack(pady=(2, 10))
+        self.update_gui()
 
-    # Create and pack the widgets for the game GUI
     def create_widgets(self):
-        """Create and pack the widgets for the game GUI."""
-        # Game title label
+        """Create and pack all widgets for the game GUI."""
+        # Title label at the top of the window
         self.title_label = tk.Label(
             self.root,
             text="SNHU Apocalypse",
@@ -53,132 +51,149 @@ class GameGUI:
         )
         self.title_label.pack(pady=20)
 
-        # Room image label
+        # Placeholder label for the room image — updated each time the player moves
         self.room_image_label = tk.Label(self.root, bg="black")
         self.room_image_label.pack(pady=10)
 
-        # Text widget to display game messages and status
+        # Read-only text area for game messages — disabled to prevent player editing
         self.game_text = tk.Text(
             self.root,
-            height=10,
+            height=5,
             width=50,
             font=("Chalkduster", 12),
             fg="white",
             bg="black",
             state="disabled",
         )
-        self.game_text.pack(pady=10)
+        self.game_text.pack(pady=(10, 2))
 
-        # Button frame for navigation buttons
+        # Frame to hold room navigation buttons — not packed yet, shown after Start is clicked
         self.button_frame = tk.Frame(self.root, bg="black")
 
-        # Pick up item button - hidden until needed
-        self.pickup_button = tk.Button(
+        # Pick Up Item is a Label styled as a button because macOS ignores fg color on tk.Button
+        # Hidden by default and shown only when the current room contains an item
+        self.pickup_button = tk.Label(
             self.root,
             text="Pick Up Item",
             font=("Chalkduster", 12),
             fg="green",
             bg="white",
-            command=self.pick_up_item,
-            state="disabled",
+            relief="solid",
+            padx=8,
+            pady=4,
         )
+        # Bind press and release separately to show a visual click effect
+        self.pickup_button.bind("<Button-1>", self._on_pickup_press)
+        self.pickup_button.bind("<ButtonRelease-1>", self._on_pickup_release)
         self.pickup_button.pack(pady=5)
-        self.pickup_button.pack_forget()  # Hide the pick up item button until it's needed
+        self.pickup_button.pack_forget()  # Hidden until a room with an item is entered
+
+    def _on_pickup_press(self, _):
+        """Change pickup button colors to indicate it is being pressed."""
+        self.pickup_button.config(bg="green", fg="white")
+
+    def _on_pickup_release(self, _):
+        """Reset pickup button colors and trigger the item pickup on release."""
+        self.pickup_button.config(bg="white", fg="green")
+        self.pick_up_item()
 
     def update_gui(self):
-        """Update the GUI elements based on the current game state."""
-
-        # Display the current status of the player and room in the game_text widget
+        """Coordinate all GUI updates based on the current game state."""
+        self._update_room_image()
         status = self.game.player_status()
+        # Exit room triggers game over flow — return early to skip normal updates
+        if self.game.is_game_over():
+            self._show_game_over(status)
+            return
+        self._update_status_text(status)
+        self._update_nav_buttons()
+        self._update_pickup_button()
 
-        # Load and display the room image
-        room_name = self.game.player.current_room.name.lower().replace(
-            " ", "_"
-        )  # Convert room name to lowercase and replace spaces with underscores for file naming
-        image_path = f"images/{room_name}.png"
-        image = tk.PhotoImage(file=image_path)
-        self.room_image_label.config(image=image)
-        self.room_image_label.image = (
-            image  # Keep reference to prevent garbage collection
-        )
-
-        # Check win/lose condition if player is in the Exit room and update the status accordingly
-        if self.game.player.current_room.name == "Exit":
-            status += self.game.check_win_lose()
-            self.game_text.config(state="normal")
-            self.game_text.delete("1.0", tk.END)
-            self.game_text.insert(tk.END, status)
-            self.game_text.config(state="disabled")
-            for widget in self.button_frame.winfo_children():
-                widget.destroy()
-            self.pickup_button.pack_forget()  # Hide pickup button at game over
-
-            # Restart button to allow player to play again after game over
-            # Restart game button
-            self.restart_button = tk.Button(
-                self.button_frame,
-                text="Play Again",
-                font=("Chalkduster", 14),
-                fg="red",
-                bg="white",
-                command=self.restart_game,
-            )
-            self.restart_button.pack(pady=10)
-            return  # Exit the update_gui function early since the game is over
-
-        # Update the game_text widget with the current status
+    def _update_status_text(self, status):
+        """Update the game text widget with the given status string."""
+        # Must enable before writing and disable after to keep the widget read-only
         self.game_text.config(state="normal")
-        self.game_text.delete("1.0", tk.END)  # clear old text
-        self.game_text.insert(tk.END, status)  # insert new text
+        self.game_text.delete("1.0", tk.END)
+        self.game_text.insert(tk.END, status)
         self.game_text.config(state="disabled")
 
-        # Destroy old navigation buttons if they exist
+    def _update_room_image(self):
+        """Load and display the image for the current room."""
+        room_name = self.game.get_current_room_name().lower().replace(" ", "_")
+        # Strip any characters that could form a path traversal (e.g. "../")
+        safe_name = "".join(c for c in room_name if c.isalnum() or c == "_")
+        try:
+            image = tk.PhotoImage(file=f"images/{safe_name}.png")
+            self.room_image_label.config(image=image)
+            # Keep a reference on the label to prevent Python garbage collecting the image
+            self.room_image_label.image = image
+        except Exception:
+            # Clear the image area if the file is missing rather than crashing
+            self.room_image_label.config(image="")
+
+    def _update_nav_buttons(self):
+        """Rebuild navigation buttons for the current room's exits."""
+        # Destroy old buttons before creating new ones for the current room
         for widget in self.button_frame.winfo_children():
             widget.destroy()
-
-        # Gets valid moves for the current room and creates buttons for each valid move
-        valid_moves = self.game.player.current_room.get_exits()
-
-        # Update button states based on valid moves
-        for direction in valid_moves:
-            button = tk.Button(
+        for direction, room in self.game.get_current_room_exits().items():
+            # d=direction captures the loop variable so each button calls move with its own direction
+            tk.Button(
                 self.button_frame,
-                text=valid_moves[direction].name,
+                text=room.name,
                 font=("Chalkduster", 12),
                 fg="green",
                 bg="white",
                 command=lambda d=direction: self.move(d),
-            )
-            button.pack(side=tk.LEFT, padx=5)
+            ).pack(side=tk.LEFT, padx=5)
 
-        # Show or hide the pick up button based on whether the room has an item
-        if self.game.player.current_room.has_item():
-            self.pickup_button.pack(pady=5)
-            self.pickup_button.config(state="normal", fg="green")
+    def _update_pickup_button(self):
+        """Show or hide the pickup button based on whether the room has an item."""
+        if self.game.current_room_has_item():
+            # Place the pickup button above the nav buttons and align it to the left
+            self.pickup_button.pack(
+                pady=5, before=self.button_frame, anchor=tk.W, padx=10
+            )
+            self.pickup_button.config(fg="green")
         else:
             self.pickup_button.pack_forget()
 
+    def _show_game_over(self, status):
+        """Display the game over state with win/lose result and a Play Again button."""
+        self._update_status_text(status + self.game.check_win_lose())
+        # Clear navigation buttons since the game is over
+        for widget in self.button_frame.winfo_children():
+            widget.destroy()
+        self.pickup_button.pack_forget()
+        self.restart_button = tk.Button(
+            self.button_frame,
+            text="Play Again",
+            font=("Chalkduster", 14),
+            fg="red",
+            bg="white",
+            command=self.restart_game,
+        )
+        self.restart_button.pack(pady=10)
+
     def move(self, direction):
         """Move the player in the specified direction and update the GUI."""
-        self.game.player.move(direction)
+        self.game.move(direction)
         self.update_gui()
 
     def pick_up_item(self):
         """Pick up the item in the current room and update the GUI."""
-        current_room = self.game.player.current_room
-        if current_room.has_item():
-            item = current_room.get_item()
-            self.game.player.add_to_inventory(item)
-            current_room.remove_item()
-            self.update_gui()  # Update the GUI to reflect the change in inventory and room status
+        self.game.pick_up_item()
+        self.update_gui()
 
     def restart_game(self):
         """Restart the game by resetting the game state and updating the GUI."""
-        self.game = Game()
-        self.restart_button.destroy()
+        # Reset game state through the Game interface rather than creating a new instance
+        self.game.reset()
+        if hasattr(self, "restart_button"):
+            self.restart_button.destroy()
         self.update_gui()
 
     def main_loop(self):
         """Start the main loop of the game GUI."""
-        self.show_game_instructions()  # Show instructions in the GUI at the start of the game
-        self.root.mainloop()  # Start the Tkinter event loop
+        self.show_game_instructions()
+        self.root.mainloop()
