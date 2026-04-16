@@ -8,13 +8,16 @@ Do you have what it takes to survive the SNHU Apocalypse?
 The original version is on the [`main`](https://github.com/JWiggins973/text-adventure-python.git) branch.
 
 ## ⚡ Enhancements - Software Design and Engineering
-- 🏗️ Refactored code into `Room`, `Player`, and `Game` classes
-- 🖥️ Added Tkinter GUI with room images, navigation buttons, and item pickup
-- 🎨 Custom room images generated with AI (Gemini)
-- 🔒 Input validation and defensive programming throughout
+- Refactored code into `Room`, `Player`, and `Game` classes
+- Added Tkinter GUI with room images, navigation buttons, and item pickup
+- Custom room images generated with AI (Gemini)
+- Input validation and defensive programming throughout
+- Organized source files into the `snhu_apocalypse` Python package
+- Added `.gitignore` to exclude system and cache files from version control
 
 ## 📸 Preview
-Coming Soon
+![Main Menu](screenshots/main_menu.png)
+![Gameplay](screenshots/gameplay.png)
 
 ## ▶️ How to Run
 Run the following command in your terminal:
