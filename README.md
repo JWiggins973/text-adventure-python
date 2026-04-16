@@ -18,7 +18,7 @@ The original version is on the [`main`](https://github.com/JWiggins973/text-adve
 ## 📸 Preview
 ![Main Menu](screenshots/mainMenu.png)
 
-![Gameplay](screenshots/gameplay.mov)
+![Gameplay](screenshots/gameplay.gif)
 
 ## ▶️ How to Run
 Run the following command in your terminal:
