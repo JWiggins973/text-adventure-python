@@ -54,11 +54,11 @@ class GameGUI:
         )
         self.title_label.pack(pady=20)
 
-        # Placeholder label for the room image — updated each time the player moves
+        # Placeholder label for the room image, updated each time the player moves
         self.room_image_label = tk.Label(self.root, bg="black")
         self.room_image_label.pack(pady=10)
 
-        # Read-only text area for game messages — disabled to prevent player editing
+        # Read-only text area for game messages, disabled to prevent player editing
         self.game_text = tk.Text(
             self.root,
             height=5,
@@ -70,10 +70,10 @@ class GameGUI:
         )
         self.game_text.pack(pady=(10, 2))
 
-        # Frame to hold room navigation buttons — not packed yet, shown after Start is clicked
+        # Frame to hold room navigation buttons not packed yet, shown after Start is clicked
         self.button_frame = tk.Frame(self.root, bg="black")
 
-        # Pick Up Item is a Label styled as a button because macOS ignores fg color on tk.Button
+        # Pick Up Item is a Label styled as a button because macOS doesnt support changing button colors on press
         # Hidden by default and shown only when the current room contains an item
         self.pickup_button = tk.Label(
             self.root,
@@ -104,7 +104,7 @@ class GameGUI:
         """Coordinate all GUI updates based on the current game state."""
         self._update_room_image()
         status = self.game.player_status()
-        # Exit room triggers game over flow — return early to skip normal updates
+        # Exit room triggers game over flow, return early to skip normal updates
         if self.game.is_game_over():
             self._show_game_over(status)
             return

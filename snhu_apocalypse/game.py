@@ -1,4 +1,3 @@
-from __future__ import annotations
 import logging
 from .room import Room
 from .player import Player
@@ -6,7 +5,7 @@ from .constants import Direction, RoomName, Item, LINE_WIDTH
 
 logger = logging.getLogger(__name__)
 
-# Room layout as a module-level constant — separates map data from game logic
+# Room layout as a module-level constant
 ROOM_DATA: dict[str, dict] = {
     RoomName.LIBRARY: {
         Direction.NORTH: RoomName.GYM,
@@ -53,7 +52,7 @@ class Game:
         """Initialize the Game class."""
         self.rooms = self._create_rooms()
         self.player = Player(self.rooms[RoomName.LIBRARY])
-        # Count collectible items at game start — excludes Exit since Principal X is not a pickup
+        # Count collectible items at game start, excludes Exit since Principal X is not a pickup
         self.total_items: int = sum(
             1 for room in self.rooms.values()
             if room.name != RoomName.EXIT and room.has_item()
@@ -74,9 +73,7 @@ class Game:
             })
         return rooms
 
-    # --- Facade methods ---
-    # These give GameGUI a clean interface so it never needs to reach into
-    # game.player or game.player.current_room directly.
+    # Public methods for GameGUI
 
     def is_game_over(self) -> bool:
         """Return True if the player has reached the Exit room."""
@@ -121,7 +118,7 @@ class Game:
         self.rooms = self._create_rooms()
         self.player = Player(self.rooms[RoomName.LIBRARY])
 
-    # --- Status and display methods ---
+    # Status and display methods
 
     def game_instructions(self) -> str:
         """Return the game instructions as a centered, formatted string."""

@@ -1,5 +1,6 @@
-from __future__ import annotations
-from typing import Optional
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Room:
@@ -9,13 +10,13 @@ class Room:
         # Filter out the "item" key so exits only contain directional keys (N/S/E/W)
         self.exits: dict[str, Room] = {k: room_dict[k] for k in room_dict if k != "item"}
         # Store the item if the room has one, otherwise None means the room is empty
-        self.item: Optional[str] = room_dict.get("item", None)
+        self.item: str | None = room_dict.get("item", None)
 
     def has_item(self) -> bool:
         """Return True if the room has an item, False otherwise."""
         return self.item is not None
 
-    def get_item(self) -> Optional[str]:
+    def get_item(self) -> str | None:
         """Return the item in the room, or None if there is no item."""
         return self.item
 
