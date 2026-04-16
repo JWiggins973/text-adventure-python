@@ -16,8 +16,9 @@ The original version is on the [`main`](https://github.com/JWiggins973/text-adve
 - Added `.gitignore` to exclude system and cache files from version control
 
 ## 📸 Preview
-![Main Menu](screenshots/main_menu.png)
-![Gameplay](screenshots/gameplay.png)
+![Main Menu](screenshots/mainMenu.png)
+
+![Gameplay](screenshots/gameplay.mov)
 
 ## ▶️ How to Run
 Run the following command in your terminal:
