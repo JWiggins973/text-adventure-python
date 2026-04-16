@@ -1,6 +1,6 @@
 # Game class to manage the game state and logic
-from room import Room
-from player import Player
+from .room import Room
+from .player import Player
 
 
 LINE_WIDTH = 60   # Controls the width of centered text in the instructions screen

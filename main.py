@@ -1,5 +1,5 @@
-from game import Game
-from gameGui import GameGUI
+from snhu_apocalypse.game import Game
+from snhu_apocalypse.gui import GameGUI
 
 if __name__ == "__main__":
     # Create the game state first, then pass it to the GUI
