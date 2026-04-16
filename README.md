@@ -18,9 +18,17 @@ The original version is on the [`main`](https://github.com/JWiggins973/text-adve
 - Added unit tests across `Room`, `Player`, and `Game` covering movement, inventory, win/lose, and reset
 
 ## 📸 Preview
-![Main Menu](screenshots/mainMenu.png)
 
-![Gameplay](screenshots/gameplay.gif)
+<table>
+  <tr>
+    <td align="center"><b>Main Menu</b></td>
+    <td align="center"><b>Gameplay</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/mainMenu.png" width="300"/></td>
+    <td><img src="screenshots/gameplay.gif" width="300"/></td>
+  </tr>
+</table>
 
 ## ▶️ How to Run
 Run the following command in your terminal:
