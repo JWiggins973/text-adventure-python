@@ -14,6 +14,8 @@ The original version is on the [`main`](https://github.com/JWiggins973/text-adve
 - Input validation and defensive programming throughout
 - Organized source files into the `snhu_apocalypse` Python package
 - Added `.gitignore` to exclude system and cache files from version control
+- Added `requirements.txt` documenting project dependencies
+- Added unit tests across `Room`, `Player`, and `Game` covering movement, inventory, win/lose, and reset
 
 ## 📸 Preview
 ![Main Menu](screenshots/mainMenu.png)
@@ -24,6 +26,11 @@ The original version is on the [`main`](https://github.com/JWiggins973/text-adve
 Run the following command in your terminal:
 
     python3.12 main.py
+
+## 🧪 Running Tests
+Run the following command from the project root:
+
+    python3 -m unittest
 
 ## ✍️ Author
 **Jermaine Wiggins** | Southern New Hampshire University | CS 499 Capstone
