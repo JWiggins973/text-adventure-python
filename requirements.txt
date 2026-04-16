@@ -1,0 +1,3 @@
+# Python 3.12+
+# tkinter is included in the Python standard library — no additional packages required.
+# To run: python3 main.py
