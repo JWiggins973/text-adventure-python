@@ -25,8 +25,21 @@ class TestPlayer(unittest.TestCase):
         self.player.move("N")
         self.assertEqual(self.player.current_room, self.gym)
 
+    def test_move_valid_returns_true(self):
+        result = self.player.move("N")
+        self.assertTrue(result)
+
     def test_move_invalid_direction(self):
         self.player.move("E")
+        self.assertEqual(self.player.current_room, self.library)
+
+    def test_move_invalid_returns_false(self):
+        result = self.player.move("E")
+        self.assertFalse(result)
+
+    def test_move_back_and_forth(self):
+        self.player.move("N")
+        self.player.move("S")
         self.assertEqual(self.player.current_room, self.library)
 
     def test_inventory_not_shared_between_instances(self):

@@ -1,20 +1,27 @@
-# Player class — tracks current room and collected items
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Player:
-    def __init__(self, current_room, inventory=None):
+    def __init__(self, current_room: "Room", inventory: list[str] | None = None) -> None:
         """Initialize a Player object with a current room and an inventory."""
         self.current_room = current_room
         # Use None as default instead of [] to avoid the mutable default argument pitfall
         # where all Player instances would share the same list
-        self.inventory = inventory if inventory is not None else []
+        self.inventory: list[str] = inventory if inventory is not None else []
 
-    def add_to_inventory(self, item):
+    def add_to_inventory(self, item: str) -> None:
         """Add an item to the player's inventory."""
         self.inventory.append(item)
+        logger.debug("Added '%s' to inventory", item)
 
-    def move(self, direction):
-        """Move the player to a new room based on the chosen direction."""
+    def move(self, direction: str) -> bool:
+        """Move the player in the given direction. Returns True if the move succeeded."""
         exits = self.current_room.get_exits()
         if direction in exits:
             self.current_room = exits[direction]
+            logger.debug("Moved %s to '%s'", direction, self.current_room.name)
+            return True
+        logger.debug("Invalid move: no exit '%s' from '%s'", direction, self.current_room.name)
+        return False
