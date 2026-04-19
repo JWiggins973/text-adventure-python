@@ -1,6 +1,8 @@
-import logging
+# Author: Jermaine Wiggins
+# Date: 2026-04-19
+# Purpose: Room model - defines exits, items, and neighbor connections
 
-logger = logging.getLogger(__name__)
+from __future__ import annotations
 
 
 class Room:

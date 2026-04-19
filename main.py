@@ -1,3 +1,7 @@
+# Author: Jermaine Wiggins
+# Date: 2026-04-19
+# Purpose: Entry point -- initializes game state and launches the GUI
+
 from snhu_apocalypse.game import Game
 from snhu_apocalypse.gui import GameGUI
 

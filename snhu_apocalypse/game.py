@@ -1,3 +1,7 @@
+# Author: Jermaine Wiggins
+# Date: 2026-04-19
+# Purpose: Core game logic - manages rooms, player state, movement, and item interactions
+
 import logging
 from .room import Room
 from .player import Player
@@ -54,7 +58,8 @@ class Game:
         self.player = Player(self.rooms[RoomName.LIBRARY])
         # Count collectible items at game start, excludes Exit since Principal X is not a pickup
         self.total_items: int = sum(
-            1 for room in self.rooms.values()
+            1
+            for room in self.rooms.values()
             if room.name != RoomName.EXIT and room.has_item()
         )
 
@@ -67,10 +72,12 @@ class Game:
         }
         # Second pass: replace string exit names with actual Room object references
         for room in rooms.values():
-            room.set_exits({
-                direction: rooms[destination]
-                for direction, destination in room.get_exits().items()
-            })
+            room.set_exits(
+                {
+                    direction: rooms[destination]
+                    for direction, destination in room.get_exits().items()
+                }
+            )
         return rooms
 
     # Public methods for GameGUI
@@ -83,14 +90,18 @@ class Game:
         """Move the player in the given direction. Returns True if the move succeeded."""
         result = self.player.move(direction)
         if not result:
-            logger.info("Move blocked: no exit '%s' from '%s'", direction, self.player.current_room.name)
+            logger.info(
+                "Move blocked: no exit '%s' from '%s'",
+                direction,
+                self.player.current_room.name,
+            )
         return result
 
     def pick_up_item(self) -> bool:
         """Pick up the item in the current room. Returns True if an item was picked up."""
         if self.player.current_room.has_item():
             item = self.player.current_room.get_item()
-            self.player.add_to_inventory(item)
+            self.player.add_to_inventory(str(item))
             self.player.current_room.remove_item()
             logger.info("Picked up '%s' in '%s'", item, self.player.current_room.name)
             return True
@@ -151,9 +162,11 @@ class Game:
             lines = [
                 f"You are in the {self.player.current_room.name}",
                 f"Items in Backpack: {self.get_inventory()}",
-                f"You see a {self.player.current_room.get_item()}"
-                if self.player.current_room.has_item()
-                else "No items in this room",
+                (
+                    f"You see a {self.player.current_room.get_item()}"
+                    if self.player.current_room.has_item()
+                    else "No items in this room"
+                ),
             ]
         return "\n".join(lines) + "\n"
 
@@ -165,8 +178,10 @@ class Game:
                 f"You have all {self.total_items} items,\n"
                 "you were able to defeat Principal X and escape!"
             )
-        return "\n".join([
-            f"You do not have all {self.total_items} items,",
-            "Principal X overpowers you",
-            "and you lose!",
-        ])
+        return "\n".join(
+            [
+                f"You do not have all {self.total_items} items,",
+                "Principal X overpowers you",
+                "and you lose!",
+            ]
+        )

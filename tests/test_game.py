@@ -1,3 +1,7 @@
+# Author: Jermaine Wiggins
+# Date: 2026-04-19
+# Purpose: Unit tests for core game logic
+
 import unittest
 from snhu_apocalypse.game import Game
 from snhu_apocalypse.constants import RoomName, Item

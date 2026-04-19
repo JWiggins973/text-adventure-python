@@ -1,3 +1,7 @@
+# Author: Jermaine Wiggins
+# Date: 2026-04-19
+# Purpose: Unit tests for Room model
+
 import unittest
 from snhu_apocalypse.room import Room
 

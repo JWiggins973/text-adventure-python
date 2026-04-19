@@ -1,3 +1,7 @@
+# Author: Jermaine Wiggins
+# Date: 2026-04-19
+# Purpose: Shared enums and constants - Direction, RoomName, Item, and layout settings
+
 from enum import StrEnum
 
 

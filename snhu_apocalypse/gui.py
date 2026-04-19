@@ -1,3 +1,7 @@
+# Author: Jermaine Wiggins
+# Date: 2026-04-19
+# Purpose: Tkinter GUI - renders game output and handles player input
+
 import tkinter as tk
 from .game import Game
 
